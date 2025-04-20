@@ -20,7 +20,7 @@ export default function LoginPage() {
   const [step, setStep] = useState<"credentials" | "verification">("credentials")
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [role, setRole] = useState<"admin" | "employer">("admin")
+  const [role, setRole] = useState<"admin" | "employer" | "member">("admin")
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -62,7 +62,11 @@ export default function LoginPage() {
         localStorage.setItem("unionpay_role", role)
 
         // Redirect to dashboard
-        router.push("/dashboard")
+        if (role === "member") {
+          router.push("/member-portal")
+        } else {
+          router.push("/dashboard")
+        }
       } else {
         setError("Invalid verification code. Please try again.")
       }
@@ -79,15 +83,16 @@ export default function LoginPage() {
         <div className="flex justify-center mb-8">
           <div className="relative h-12 w-48">
             <div className="flex items-center justify-center h-full">
-              <h1 className="text-2xl font-bold text-blue-700">UnionPay</h1>
+              <h1 className="text-2xl font-bold text-yellow-600">UnionPay</h1>
             </div>
           </div>
         </div>
 
-        <Tabs defaultValue="admin" onValueChange={(value) => setRole(value as "admin" | "employer")}>
-          <TabsList className="grid w-full grid-cols-2 mb-6">
+        <Tabs defaultValue="admin" onValueChange={(value) => setRole(value as "admin" | "employer" | "member")}>
+          <TabsList className="grid w-full grid-cols-3 mb-6">
             <TabsTrigger value="admin">Union Admin</TabsTrigger>
             <TabsTrigger value="employer">Employer</TabsTrigger>
+            <TabsTrigger value="member">Member</TabsTrigger>
           </TabsList>
         </Tabs>
 
@@ -115,7 +120,13 @@ export default function LoginPage() {
                   <Input
                     id="email"
                     type="email"
-                    placeholder="admin@unionpay.org"
+                    placeholder={
+                      role === "admin"
+                        ? "admin@unionpay.org"
+                        : role === "employer"
+                          ? "employer@company.com"
+                          : "member@example.com"
+                    }
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
@@ -131,7 +142,7 @@ export default function LoginPage() {
                     required
                   />
                 </div>
-                <Button type="submit" className="w-full" disabled={loading}>
+                <Button type="submit" className="w-full bg-yellow-600 hover:bg-yellow-700" disabled={loading}>
                   {loading ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -157,7 +168,7 @@ export default function LoginPage() {
                   />
                   <p className="text-xs text-gray-500 mt-1">For demo purposes, use code: 123456</p>
                 </div>
-                <Button type="submit" className="w-full" disabled={loading}>
+                <Button type="submit" className="w-full bg-yellow-600 hover:bg-yellow-700" disabled={loading}>
                   {loading ? (
                     <>
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />

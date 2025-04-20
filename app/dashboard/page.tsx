@@ -1,8 +1,9 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Users, Banknote, CreditCard, Briefcase, TrendingUp, AlertTriangle, CheckCircle2 } from "lucide-react"
+import { Users, Banknote, CreditCard, Briefcase, AlertTriangle, CheckCircle2 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
+import { AnalyticsDashboard } from "@/components/analytics-dashboard"
 
 export default function DashboardPage() {
   return (
@@ -243,22 +244,7 @@ export default function DashboardPage() {
           </div>
         </TabsContent>
         <TabsContent value="analytics" className="space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle>Analytics Dashboard</CardTitle>
-              <CardDescription>Detailed metrics and trends will be displayed here</CardDescription>
-            </CardHeader>
-            <CardContent className="h-[400px] flex items-center justify-center">
-              <div className="text-center space-y-2">
-                <TrendingUp className="h-12 w-12 text-muted-foreground mx-auto" />
-                <h3 className="text-lg font-medium">Analytics Coming Soon</h3>
-                <p className="text-sm text-muted-foreground max-w-md">
-                  This feature will be implemented in the next phase of development. It will include detailed charts and
-                  metrics for union activities.
-                </p>
-              </div>
-            </CardContent>
-          </Card>
+          <AnalyticsDashboard />
         </TabsContent>
         <TabsContent value="reports" className="space-y-4">
           <Card>
@@ -266,14 +252,124 @@ export default function DashboardPage() {
               <CardTitle>Reports</CardTitle>
               <CardDescription>Generate and download reports</CardDescription>
             </CardHeader>
-            <CardContent className="h-[400px] flex items-center justify-center">
-              <div className="text-center space-y-2">
-                <TrendingUp className="h-12 w-12 text-muted-foreground mx-auto" />
-                <h3 className="text-lg font-medium">Reports Coming Soon</h3>
-                <p className="text-sm text-muted-foreground max-w-md">
-                  This feature will be implemented in the next phase of development. It will include exportable reports
-                  for payments, loans, and member activities.
-                </p>
+            <CardContent>
+              <div className="grid gap-6">
+                <div className="grid gap-3">
+                  <h3 className="text-lg font-medium">Available Reports</h3>
+                  <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                    <Card className="p-4">
+                      <div className="flex flex-col gap-2">
+                        <h4 className="font-medium">Member Activity Report</h4>
+                        <p className="text-sm text-muted-foreground">
+                          Detailed report of member registrations, payments, and loan activities
+                        </p>
+                        <Button size="sm" className="mt-2">
+                          Generate Report
+                        </Button>
+                      </div>
+                    </Card>
+                    <Card className="p-4">
+                      <div className="flex flex-col gap-2">
+                        <h4 className="font-medium">Financial Summary</h4>
+                        <p className="text-sm text-muted-foreground">
+                          Summary of all financial transactions, loans, and payments
+                        </p>
+                        <Button size="sm" className="mt-2">
+                          Generate Report
+                        </Button>
+                      </div>
+                    </Card>
+                    <Card className="p-4">
+                      <div className="flex flex-col gap-2">
+                        <h4 className="font-medium">Job Placement Report</h4>
+                        <p className="text-sm text-muted-foreground">
+                          Statistics on job postings, applications, and placements
+                        </p>
+                        <Button size="sm" className="mt-2">
+                          Generate Report
+                        </Button>
+                      </div>
+                    </Card>
+                    <Card className="p-4">
+                      <div className="flex flex-col gap-2">
+                        <h4 className="font-medium">Insurance Claims Report</h4>
+                        <p className="text-sm text-muted-foreground">
+                          Summary of insurance claims, approvals, and rejections
+                        </p>
+                        <Button size="sm" className="mt-2">
+                          Generate Report
+                        </Button>
+                      </div>
+                    </Card>
+                    <Card className="p-4">
+                      <div className="flex flex-col gap-2">
+                        <h4 className="font-medium">SMS/USSD Usage Report</h4>
+                        <p className="text-sm text-muted-foreground">
+                          Analysis of SMS and USSD service usage by members
+                        </p>
+                        <Button size="sm" className="mt-2">
+                          Generate Report
+                        </Button>
+                      </div>
+                    </Card>
+                    <Card className="p-4">
+                      <div className="flex flex-col gap-2">
+                        <h4 className="font-medium">Custom Report</h4>
+                        <p className="text-sm text-muted-foreground">Create a custom report with specific parameters</p>
+                        <Button size="sm" className="mt-2">
+                          Create Custom Report
+                        </Button>
+                      </div>
+                    </Card>
+                  </div>
+                </div>
+                <div className="grid gap-3">
+                  <h3 className="text-lg font-medium">Recent Reports</h3>
+                  <div className="rounded-md border">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="border-b bg-muted/50">
+                          <th className="p-2 text-left font-medium">Report Name</th>
+                          <th className="p-2 text-left font-medium">Generated On</th>
+                          <th className="p-2 text-left font-medium">Generated By</th>
+                          <th className="p-2 text-left font-medium">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr className="border-b">
+                          <td className="p-2">Financial Summary - May 2025</td>
+                          <td className="p-2">May 15, 2025</td>
+                          <td className="p-2">Admin User</td>
+                          <td className="p-2">
+                            <Button variant="outline" size="sm">
+                              Download
+                            </Button>
+                          </td>
+                        </tr>
+                        <tr className="border-b">
+                          <td className="p-2">Member Activity Report - Q2 2025</td>
+                          <td className="p-2">May 10, 2025</td>
+                          <td className="p-2">Admin User</td>
+                          <td className="p-2">
+                            <Button variant="outline" size="sm">
+                              Download
+                            </Button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td className="p-2">Job Placement Report - April 2025</td>
+                          <td className="p-2">May 5, 2025</td>
+                          <td className="p-2">Admin User</td>
+                          <td className="p-2">
+                            <Button variant="outline" size="sm">
+                              Download
+                            </Button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
               </div>
             </CardContent>
           </Card>

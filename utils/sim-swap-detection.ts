@@ -1,80 +1,65 @@
-// Utility functions for SIM swap detection
-
 /**
  * Checks if a SIM swap has occurred recently for a given phone number
- * In a real implementation, this would call Africa's Talking API or a similar service
+ * In a real implementation, this would integrate with Africa's Talking API
  */
-export async function checkSimSwapStatus(phoneNumber: string): Promise<{
-  recentSwap: boolean
-  lastSwapDate: Date | null
-  riskLevel: "low" | "medium" | "high"
-}> {
-  // In a real implementation, this would make an API call to a service like Africa's Talking
-  // For the demo, we'll simulate the response
-
-  // Simulate API call delay
+export async function checkSimSwapStatus(phoneNumber: string) {
+  // Simulate API call to check SIM swap status
   await new Promise((resolve) => setTimeout(resolve, 1000))
 
-  // For demo purposes, we'll consider phone numbers ending with specific digits as having recent swaps
-  const lastDigit = phoneNumber.slice(-1)
+  // For demo purposes, we'll simulate different scenarios based on the phone number
+  // In a real implementation, this would call the Africa's Talking API
+  const lastDigit = Number.parseInt(phoneNumber.slice(-1))
 
-  if (lastDigit === "1") {
-    // High risk - very recent swap
+  if (lastDigit >= 0 && lastDigit <= 2) {
+    // High risk - very recent SIM swap (within 24 hours)
     return {
       recentSwap: true,
-      lastSwapDate: new Date(Date.now() - 24 * 60 * 60 * 1000), // 1 day ago
-      riskLevel: "high",
+      lastSwapDate: new Date(Date.now() - 12 * 60 * 60 * 1000), // 12 hours ago
+      riskLevel: "high" as const,
     }
-  } else if (lastDigit === "2") {
-    // Medium risk - swap within last week
+  } else if (lastDigit >= 3 && lastDigit <= 5) {
+    // Medium risk - recent SIM swap (within 72 hours)
+    return {
+      recentSwap: true,
+      lastSwapDate: new Date(Date.now() - 48 * 60 * 60 * 1000), // 48 hours ago
+      riskLevel: "medium" as const,
+    }
+  } else if (lastDigit >= 6 && lastDigit <= 7) {
+    // Low risk - SIM swap occurred but not very recent (within 7 days)
     return {
       recentSwap: true,
       lastSwapDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000), // 5 days ago
-      riskLevel: "medium",
+      riskLevel: "low" as const,
     }
-  } else if (lastDigit === "3") {
-    // Low risk - swap within last month
+  } else {
+    // No recent SIM swap
     return {
-      recentSwap: true,
-      lastSwapDate: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000), // 20 days ago
-      riskLevel: "low",
+      recentSwap: false,
+      lastSwapDate: null,
+      riskLevel: "low" as const,
     }
-  }
-
-  // No recent swap detected
-  return {
-    recentSwap: false,
-    lastSwapDate: null,
-    riskLevel: "low",
   }
 }
 
 /**
  * Handles additional verification when a SIM swap is detected
+ * Returns whether verification was successful and the method used
  */
-export async function handleSimSwapVerification(
-  phoneNumber: string,
-  riskLevel: "low" | "medium" | "high",
-): Promise<{
-  verified: boolean
-  verificationMethod: string
-}> {
-  // In a real implementation, this would trigger additional verification steps
-  // For high risk, might require in-person verification
-  // For medium risk, might require additional ID verification
-  // For low risk, might require additional SMS or email verification
+export async function handleSimSwapVerification(phoneNumber: string, riskLevel: "low" | "medium" | "high") {
+  // Simulate API call for verification
+  await new Promise((resolve) => setTimeout(resolve, 2000))
 
-  // Simulate verification process
-  await new Promise((resolve) => setTimeout(resolve, 1500))
+  // In a real implementation, this would perform different verification methods
+  // based on the risk level and return the result
 
   // For demo purposes, we'll simulate successful verification
   return {
     verified: true,
     verificationMethod:
       riskLevel === "high"
-        ? "Alternative phone verification"
+        ? "alternative phone verification and ID verification"
         : riskLevel === "medium"
-          ? "Email verification"
-          : "SMS verification",
+          ? "email verification and security questions"
+          : "email verification",
   }
 }

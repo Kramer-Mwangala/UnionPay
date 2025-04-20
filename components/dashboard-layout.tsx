@@ -28,6 +28,8 @@ import {
   LogOut,
   BarChart3,
   Settings,
+  Building,
+  FileText,
 } from "lucide-react"
 import {
   DropdownMenu,
@@ -75,18 +77,20 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const navigation = [
     { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
     { name: "Members", href: "/dashboard/members", icon: Users },
+    { name: "Unions", href: "/dashboard/unions", icon: Building },
     { name: "Payments", href: "/dashboard/payments", icon: CreditCard },
     { name: "Loans", href: "/dashboard/loans", icon: Banknote },
     { name: "Jobs", href: "/dashboard/jobs", icon: Briefcase },
     { name: "Insurance", href: "/dashboard/insurance", icon: ShieldCheck },
     { name: "Analytics", href: "/dashboard/analytics", icon: BarChart3 },
+    { name: "Documentation", href: "/documentation", icon: FileText },
     { name: "Settings", href: "/dashboard/settings", icon: Settings },
   ]
 
   // Filter navigation items based on role
   const filteredNavigation =
     role === "employer"
-      ? navigation.filter((item) => ["Dashboard", "Payments", "Jobs"].includes(item.name))
+      ? navigation.filter((item) => ["Dashboard", "Payments", "Jobs", "Documentation"].includes(item.name))
       : navigation
 
   return (
@@ -95,7 +99,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         <Sidebar variant="sidebar" collapsible="icon">
           <SidebarHeader className="flex h-14 items-center border-b px-4">
             <div className="flex items-center gap-2 font-semibold">
-              <div className="h-6 w-6 rounded-md bg-blue-600 text-white flex items-center justify-center text-sm font-bold">
+              <div className="h-6 w-6 rounded-md bg-yellow-600 text-black flex items-center justify-center text-sm font-bold">
                 UP
               </div>
               <span className="text-lg">UnionPay</span>
@@ -121,7 +125,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 <Button variant="ghost" className="w-full justify-start gap-2">
                   <Avatar className="h-6 w-6">
                     <AvatarImage src="/placeholder.svg" />
-                    <AvatarFallback className="bg-blue-100 text-blue-600">
+                    <AvatarFallback className="bg-yellow-100 text-yellow-600">
                       {role === "admin" ? "AD" : "EM"}
                     </AvatarFallback>
                   </Avatar>
@@ -158,12 +162,14 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               <h1 className="text-lg font-semibold">
                 {pathname === "/dashboard" && "Dashboard"}
                 {pathname === "/dashboard/members" && "Member Management"}
+                {pathname === "/dashboard/unions" && "Union Management"}
                 {pathname === "/dashboard/payments" && "Payment Disbursement"}
                 {pathname === "/dashboard/loans" && "Loan Management"}
                 {pathname === "/dashboard/jobs" && "Job Postings"}
                 {pathname === "/dashboard/insurance" && "Insurance Management"}
                 {pathname === "/dashboard/analytics" && "Analytics"}
                 {pathname === "/dashboard/settings" && "Settings"}
+                {pathname === "/documentation" && "Documentation"}
               </h1>
             </div>
           </header>

@@ -4,143 +4,140 @@ import { Badge } from "@/components/ui/badge"
 
 export default function ApiDocsPage() {
   return (
-    <div className="container mx-auto py-10">
-      <div className="mb-10 space-y-4">
-        <h1 className="text-4xl font-bold">UnionPay API Documentation</h1>
-        <p className="text-xl text-muted-foreground">
-          Comprehensive API reference for backend developers implementing the UnionPay system.
+    <div className="container py-10">
+      <div className="mb-10">
+        <h1 className="text-4xl font-bold mb-2">UnionPay API Documentation</h1>
+        <p className="text-lg text-muted-foreground">
+          Complete API reference for backend developers implementing the UnionPay system.
         </p>
       </div>
 
-      <Tabs defaultValue="auth" className="space-y-8">
-        <TabsList className="grid w-full grid-cols-2 md:grid-cols-7">
-          <TabsTrigger value="auth">Authentication</TabsTrigger>
-          <TabsTrigger value="members">Members</TabsTrigger>
-          <TabsTrigger value="payments">Payments</TabsTrigger>
-          <TabsTrigger value="loans">Loans</TabsTrigger>
-          <TabsTrigger value="jobs">Jobs</TabsTrigger>
-          <TabsTrigger value="insurance">Insurance</TabsTrigger>
-          <TabsTrigger value="ussd">USSD/SMS</TabsTrigger>
+      <Tabs defaultValue="authentication" className="space-y-6">
+        <TabsList className="flex flex-wrap">
+          <TabsTrigger value="authentication">Authentication</TabsTrigger>
+          <TabsTrigger value="members">Member Management</TabsTrigger>
+          <TabsTrigger value="payments">Payment</TabsTrigger>
+          <TabsTrigger value="loans">Loan Management</TabsTrigger>
+          <TabsTrigger value="jobs">Job Posting</TabsTrigger>
+          <TabsTrigger value="insurance">Insurance Management</TabsTrigger>
+          <TabsTrigger value="ussd">USSD/SMS Integration</TabsTrigger>
+          <TabsTrigger value="security">Security</TabsTrigger>
         </TabsList>
 
-        {/* Authentication Endpoints */}
-        <TabsContent value="auth" className="space-y-6">
-          <h2 className="text-2xl font-bold">Authentication Endpoints</h2>
-          <p className="text-muted-foreground">
-            These endpoints handle user authentication, including login, 2FA verification, and token management.
-          </p>
-
+        <TabsContent value="authentication" className="space-y-4">
+          {/* Authentication API endpoints */}
           <Card>
             <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle>Login</CardTitle>
-                <Badge>POST</Badge>
-              </div>
-              <CardDescription>Authenticate a user with email and password</CardDescription>
+              <CardTitle>Authentication</CardTitle>
+              <CardDescription>API endpoints for user authentication and authorization</CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <h4 className="font-medium">Endpoint</h4>
-                <code className="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm">
-                  /api/auth/login
-                </code>
-              </div>
-              <div>
-                <h4 className="font-medium">Request Body</h4>
-                <pre className="relative rounded bg-muted p-4 font-mono text-sm">
-                  {`{
-  "email": "admin@unionpay.org",
-  "password": "password123",
-  "role": "admin" // or "employer"
+            <CardContent className="space-y-6">
+              {/* Login endpoint */}
+              <div className="space-y-2">
+                <h3 className="text-lg font-medium">Login</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-sm font-medium">Endpoint</p>
+                    <p className="text-sm font-mono bg-muted p-2 rounded-md">/api/auth/login</p>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium">Method</p>
+                    <p className="text-sm font-mono bg-muted p-2 rounded-md">POST</p>
+                  </div>
+                </div>
+                <div>
+                  <p className="text-sm font-medium">Request Body</p>
+                  <pre className="text-sm font-mono bg-muted p-2 rounded-md overflow-auto">
+                    {`{
+  "username": "string",
+  "password": "string"
 }`}
-                </pre>
-              </div>
-              <div>
-                <h4 className="font-medium">Response</h4>
-                <pre className="relative rounded bg-muted p-4 font-mono text-sm">
-                  {`{
-  "success": true,
-  "message": "Verification code sent",
-  "userId": "user_123",
-  "requiresVerification": true
-}`}
-                </pre>
-              </div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle>Verify 2FA</CardTitle>
-                <Badge>POST</Badge>
-              </div>
-              <CardDescription>Verify the SMS code sent during login</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <h4 className="font-medium">Endpoint</h4>
-                <code className="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm">
-                  /api/auth/verify
-                </code>
-              </div>
-              <div>
-                <h4 className="font-medium">Request Body</h4>
-                <pre className="relative rounded bg-muted p-4 font-mono text-sm">
-                  {`{
-  "userId": "user_123",
-  "verificationCode": "123456"
-}`}
-                </pre>
-              </div>
-              <div>
-                <h4 className="font-medium">Response</h4>
-                <pre className="relative rounded bg-muted p-4 font-mono text-sm">
-                  {`{
-  "success": true,
-  "message": "Authentication successful",
-  "token": "jwt_token_here",
+                  </pre>
+                </div>
+                <div>
+                  <p className="text-sm font-medium">Response</p>
+                  <pre className="text-sm font-mono bg-muted p-2 rounded-md overflow-auto">
+                    {`{
+  "token": "string",
   "user": {
-    "id": "user_123",
-    "name": "Admin User",
-    "email": "admin@unionpay.org",
-    "role": "admin"
+    "id": "string",
+    "username": "string",
+    "role": "admin | employer | member"
   }
 }`}
-                </pre>
+                  </pre>
+                </div>
               </div>
-            </CardContent>
-          </Card>
 
-          <Card>
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle>Logout</CardTitle>
-                <Badge>POST</Badge>
-              </div>
-              <CardDescription>Invalidate the user's authentication token</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <h4 className="font-medium">Endpoint</h4>
-                <code className="relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm">
-                  /api/auth/logout
-                </code>
-              </div>
-              <div>
-                <h4 className="font-medium">Headers</h4>
-                <pre className="relative rounded bg-muted p-4 font-mono text-sm">
-                  {`Authorization: Bearer jwt_token_here`}
-                </pre>
-              </div>
-              <div>
-                <h4 className="font-medium">Response</h4>
-                <pre className="relative rounded bg-muted p-4 font-mono text-sm">
-                  {`{
-  "success": true,
-  "message": "Logged out successfully"
+              {/* 2FA Verification endpoint */}
+              <div className="space-y-2">
+                <h3 className="text-lg font-medium">2FA Verification</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-sm font-medium">Endpoint</p>
+                    <p className="text-sm font-mono bg-muted p-2 rounded-md">/api/auth/verify-2fa</p>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium">Method</p>
+                    <p className="text-sm font-mono bg-muted p-2 rounded-md">POST</p>
+                  </div>
+                </div>
+                <div>
+                  <p className="text-sm font-medium">Request Body</p>
+                  <pre className="text-sm font-mono bg-muted p-2 rounded-md overflow-auto">
+                    {`{
+  "userId": "string",
+  "code": "string"
 }`}
-                </pre>
+                  </pre>
+                </div>
+                <div>
+                  <p className="text-sm font-medium">Response</p>
+                  <pre className="text-sm font-mono bg-muted p-2 rounded-md overflow-auto">
+                    {`{
+  "success": true,
+  "token": "string"
+}`}
+                  </pre>
+                </div>
+              </div>
+
+              {/* Register endpoint */}
+              <div className="space-y-2">
+                <h3 className="text-lg font-medium">Register</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-sm font-medium">Endpoint</p>
+                    <p className="text-sm font-mono bg-muted p-2 rounded-md">/api/auth/register</p>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium">Method</p>
+                    <p className="text-sm font-mono bg-muted p-2 rounded-md">POST</p>
+                  </div>
+                </div>
+                <div>
+                  <p className="text-sm font-medium">Request Body</p>
+                  <pre className="text-sm font-mono bg-muted p-2 rounded-md overflow-auto">
+                    {`{
+  "username": "string",
+  "password": "string",
+  "email": "string",
+  "phone": "string",
+  "role": "admin | employer | member",
+  "fullName": "string"
+}`}
+                  </pre>
+                </div>
+                <div>
+                  <p className="text-sm font-medium">Response</p>
+                  <pre className="text-sm font-mono bg-muted p-2 rounded-md overflow-auto">
+                    {`{
+  "success": true,
+  "userId": "string",
+  "message": "Registration successful. Please verify your account."
+}`}
+                  </pre>
+                </div>
               </div>
             </CardContent>
           </Card>
@@ -1700,6 +1697,172 @@ Content-Type: multipart/form-data`}
   }
 }`}
                 </pre>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Security Endpoints */}
+        <TabsContent value="security" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Security</CardTitle>
+              <CardDescription>API endpoints for security features including SIM swap detection</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              {/* SIM Swap Detection endpoint */}
+              <div className="space-y-2">
+                <h3 className="text-lg font-medium">SIM Swap Detection</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-sm font-medium">Endpoint</p>
+                    <p className="text-sm font-mono bg-muted p-2 rounded-md">/api/security/sim-swap-check</p>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium">Method</p>
+                    <p className="text-sm font-mono bg-muted p-2 rounded-md">GET</p>
+                  </div>
+                </div>
+                <div>
+                  <p className="text-sm font-medium">Query Parameters</p>
+                  <pre className="text-sm font-mono bg-muted p-2 rounded-md overflow-auto">
+                    {`phoneNumber: string (required) - The phone number to check in international format`}
+                  </pre>
+                </div>
+                <div>
+                  <p className="text-sm font-medium">Response</p>
+                  <pre className="text-sm font-mono bg-muted p-2 rounded-md overflow-auto">
+                    {`{
+  "recentSwap": boolean,
+  "lastSwapDate": string | null,
+  "riskLevel": "low" | "medium" | "high"
+}`}
+                  </pre>
+                </div>
+              </div>
+
+              {/* Verify After SIM Swap endpoint */}
+              <div className="space-y-2">
+                <h3 className="text-lg font-medium">Verify After SIM Swap</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-sm font-medium">Endpoint</p>
+                    <p className="text-sm font-mono bg-muted p-2 rounded-md">/api/security/verify-after-swap</p>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium">Method</p>
+                    <p className="text-sm font-mono bg-muted p-2 rounded-md">POST</p>
+                  </div>
+                </div>
+                <div>
+                  <p className="text-sm font-medium">Request Body</p>
+                  <pre className="text-sm font-mono bg-muted p-2 rounded-md overflow-auto">
+                    {`{
+  "phoneNumber": "string",
+  "verificationMethod": "email" | "alternative_phone" | "security_questions",
+  "verificationData": {
+    // Depends on verification method
+    "email": "string",
+    "code": "string"
+    // or
+    "alternativePhone": "string",
+    "code": "string"
+    // or
+    "answers": [
+      {
+        "questionId": "string",
+        "answer": "string"
+      }
+    ]
+  }
+}`}
+                  </pre>
+                </div>
+                <div>
+                  <p className="text-sm font-medium">Response</p>
+                  <pre className="text-sm font-mono bg-muted p-2 rounded-md overflow-auto">
+                    {`{
+  "verified": boolean,
+  "verificationMethod": "string",
+  "expiresAt": "string"
+}`}
+                  </pre>
+                </div>
+              </div>
+
+              {/* Batch SIM Swap Check endpoint */}
+              <div className="space-y-2">
+                <h3 className="text-lg font-medium">Batch SIM Swap Check</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-sm font-medium">Endpoint</p>
+                    <p className="text-sm font-mono bg-muted p-2 rounded-md">/api/security/batch-sim-swap-check</p>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium">Method</p>
+                    <p className="text-sm font-mono bg-muted p-2 rounded-md">POST</p>
+                  </div>
+                </div>
+                <div>
+                  <p className="text-sm font-medium">Request Body</p>
+                  <pre className="text-sm font-mono bg-muted p-2 rounded-md overflow-auto">
+                    {`{
+  "phoneNumbers": ["string"]
+}`}
+                  </pre>
+                </div>
+                <div>
+                  <p className="text-sm font-medium">Response</p>
+                  <pre className="text-sm font-mono bg-muted p-2 rounded-md overflow-auto">
+                    {`{
+  "results": {
+    "phoneNumber": {
+      "recentSwap": boolean,
+      "lastSwapDate": string | null,
+      "riskLevel": "low" | "medium" | "high"
+    }
+  },
+  "summary": {
+    "total": number,
+    "highRisk": number,
+    "mediumRisk": number,
+    "lowRisk": number
+  }
+}`}
+                  </pre>
+                </div>
+              </div>
+
+              {/* Get SIM Swap History endpoint */}
+              <div className="space-y-2">
+                <h3 className="text-lg font-medium">Get SIM Swap History</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-sm font-medium">Endpoint</p>
+                    <p className="text-sm font-mono bg-muted p-2 rounded-md">
+                      /api/security/sim-swap-history/:phoneNumber
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium">Method</p>
+                    <p className="text-sm font-mono bg-muted p-2 rounded-md">GET</p>
+                  </div>
+                </div>
+                <div>
+                  <p className="text-sm font-medium">Response</p>
+                  <pre className="text-sm font-mono bg-muted p-2 rounded-md overflow-auto">
+                    {`{
+  "phoneNumber": "string",
+  "history": [
+    {
+      "date": "string",
+      "previousNetwork": "string",
+      "newNetwork": "string"
+    }
+  ]
+}`}
+                  </pre>
+                </div>
               </div>
             </CardContent>
           </Card>

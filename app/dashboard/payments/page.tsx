@@ -222,6 +222,17 @@ export default function PaymentsPage() {
 
   return (
     <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <h2 className="text-3xl font-bold tracking-tight">Payment Management</h2>
+        <div className="flex flex-wrap gap-2">
+          <Button variant="outline" asChild>
+            <a href="/dashboard/payments/employer-payments">Employer Payments</a>
+          </Button>
+          <Button variant="outline" asChild>
+            <a href="/dashboard/payments/union-distributions">Union Distributions</a>
+          </Button>
+        </div>
+      </div>
       <Tabs defaultValue="history" className="space-y-4">
         <TabsList>
           <TabsTrigger value="history">Payment History</TabsTrigger>

@@ -178,9 +178,11 @@ export default function MembersPage() {
                 <Download className="mr-2 h-4 w-4" />
                 Export
               </Button>
-              <Button size="sm">
-                <UserPlus className="mr-2 h-4 w-4" />
-                Add Member
+              <Button size="sm" asChild>
+                <a href="/dashboard/members/register">
+                  <UserPlus className="mr-2 h-4 w-4" />
+                  Add Member
+                </a>
               </Button>
             </div>
           </div>
