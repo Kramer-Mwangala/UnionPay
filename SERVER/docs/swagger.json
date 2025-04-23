@@ -1,0 +1,984 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "title": "UnionPay System API",
+      "description": "API documentation for the UnionPay system for construction workers",
+      "version": "1.0.0",
+      "contact": {
+        "email": "kramermwangala@gmail.com"
+      }
+    },
+    "host": "api.unionpay-system.com",
+    "basePath": "/api/v1",
+    "schemes": [
+      "https"
+    ],
+    "securityDefinitions": {
+      "BearerAuth": {
+        "type": "apiKey",
+        "name": "Authorization",
+        "in": "header",
+        "description": "Enter your bearer token in the format 'Bearer {token}'"
+      }
+    },
+    "paths": {
+      "/jobs": {
+        "get": {
+          "tags": [
+            "Jobs"
+          ],
+          "summary": "Get all jobs with optional filtering",
+          "description": "Returns a paginated list of job postings with search and filter options",
+          "operationId": "getAllJobs",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "page",
+              "in": "query",
+              "description": "Page number for pagination",
+              "required": false,
+              "type": "integer",
+              "default": 1
+            },
+            {
+              "name": "limit",
+              "in": "query",
+              "description": "Number of items per page",
+              "required": false,
+              "type": "integer",
+              "default": 10
+            },
+            {
+              "name": "location",
+              "in": "query",
+              "description": "Filter by job location",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "name": "title",
+              "in": "query",
+              "description": "Filter by job title",
+              "required": false,
+              "type": "string"
+            },
+            {
+              "name": "status",
+              "in": "query",
+              "description": "Filter by job status",
+              "required": false,
+              "type": "string",
+              "enum": [
+                "open",
+                "closed",
+                "filled"
+              ]
+            },
+            {
+              "name": "postedAfter",
+              "in": "query",
+              "description": "Filter jobs posted after this date (ISO format)",
+              "required": false,
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "name": "postedBefore",
+              "in": "query",
+              "description": "Filter jobs posted before this date (ISO format)",
+              "required": false,
+              "type": "string",
+              "format": "date-time"
+            },
+            {
+              "name": "sortBy",
+              "in": "query",
+              "description": "Field to sort by",
+              "required": false,
+              "type": "string",
+              "default": "createdAt",
+              "enum": [
+                "createdAt",
+                "title",
+                "salary",
+                "location"
+              ]
+            },
+            {
+              "name": "sortOrder",
+              "in": "query",
+              "description": "Sort order",
+              "required": false,
+              "type": "string",
+              "default": "desc",
+              "enum": [
+                "asc",
+                "desc"
+              ]
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful operation",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "success": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "data": {
+                    "type": "object",
+                    "properties": {
+                      "jobs": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/definitions/Job"
+                        }
+                      },
+                      "pagination": {
+                        "type": "object",
+                        "properties": {
+                          "total": {
+                            "type": "integer",
+                            "example": 43
+                          },
+                          "page": {
+                            "type": "integer",
+                            "example": 1
+                          },
+                          "limit": {
+                            "type": "integer",
+                            "example": 10
+                          },
+                          "pages": {
+                            "type": "integer",
+                            "example": 5
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Server error",
+              "schema": {
+                "$ref": "#/definitions/Error"
+              }
+            }
+          },
+          "security": [
+            {
+              "BearerAuth": []
+            }
+          ]
+        },
+        "post": {
+          "tags": [
+            "Jobs"
+          ],
+          "summary": "Create a new job posting",
+          "description": "Creates a new job posting with the provided information",
+          "operationId": "createJob",
+          "produces": [
+            "application/json"
+          ],
+          "consumes": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "in": "body",
+              "name": "body",
+              "description": "Job object that needs to be added",
+              "required": true,
+              "schema": {
+                "type": "object",
+                "required": [
+                  "title",
+                  "description",
+                  "location",
+                  "salary"
+                ],
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "example": "Construction Site Manager"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "Looking for an experienced site manager to oversee our commercial building project."
+                  },
+                  "requirements": {
+                    "type": "string",
+                    "example": "Minimum 5 years experience in commercial construction. Valid certifications required."
+                  },
+                  "location": {
+                    "type": "string",
+                    "example": "Nairobi, Kenya"
+                  },
+                  "contractType": {
+                    "type": "string",
+                    "enum": [
+                      "full-time",
+                      "part-time",
+                      "contract",
+                      "temporary"
+                    ],
+                    "example": "full-time"
+                  },
+                  "salary": {
+                    "type": "object",
+                    "properties": {
+                      "amount": {
+                        "type": "number",
+                        "example": 80000
+                      },
+                      "currency": {
+                        "type": "string",
+                        "example": "KES"
+                      },
+                      "period": {
+                        "type": "string",
+                        "enum": [
+                          "hourly",
+                          "daily",
+                          "weekly",
+                          "monthly",
+                          "yearly"
+                        ],
+                        "example": "monthly"
+                      }
+                    }
+                  },
+                  "skills": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "example": [
+                      "Project Management",
+                      "Team Leadership",
+                      "Safety Compliance"
+                    ]
+                  },
+                  "applicationDeadline": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2025-05-30T00:00:00.000Z"
+                  },
+                  "startDate": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2025-06-15T00:00:00.000Z"
+                  },
+                  "contactEmail": {
+                    "type": "string",
+                    "format": "email",
+                    "example": "kramermwangala@gmail.com"
+                  },
+                  "contactPhone": {
+                    "type": "string",
+                    "example": "+254712345678"
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "201": {
+              "description": "Job created successfully",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "success": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "data": {
+                    "type": "object",
+                    "properties": {
+                      "job": {
+                        "$ref": "#/definitions/Job"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid input",
+              "schema": {
+                "$ref": "#/definitions/Error"
+              }
+            },
+            "401": {
+              "description": "Unauthorized",
+              "schema": {
+                "$ref": "#/definitions/Error"
+              }
+            },
+            "500": {
+              "description": "Server error",
+              "schema": {
+                "$ref": "#/definitions/Error"
+              }
+            }
+          },
+          "security": [
+            {
+              "BearerAuth": []
+            }
+          ]
+        }
+      },
+      "/jobs/search": {
+        "get": {
+          "tags": [
+            "Jobs"
+          ],
+          "summary": "Search jobs by keyword",
+          "description": "Searches across job title, description, skills, and location",
+          "operationId": "searchJobs",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "q",
+              "in": "query",
+              "description": "Search term",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "name": "page",
+              "in": "query",
+              "description": "Page number for pagination",
+              "required": false,
+              "type": "integer",
+              "default": 1
+            },
+            {
+              "name": "limit",
+              "in": "query",
+              "description": "Number of items per page",
+              "required": false,
+              "type": "integer",
+              "default": 10
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful operation",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "success": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "data": {
+                    "type": "object",
+                    "properties": {
+                      "jobs": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/definitions/Job"
+                        }
+                      },
+                      "pagination": {
+                        "type": "object",
+                        "properties": {
+                          "total": {
+                            "type": "integer",
+                            "example": 5
+                          },
+                          "page": {
+                            "type": "integer",
+                            "example": 1
+                          },
+                          "limit": {
+                            "type": "integer",
+                            "example": 10
+                          },
+                          "pages": {
+                            "type": "integer",
+                            "example": 1
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Missing search term",
+              "schema": {
+                "$ref": "#/definitions/Error"
+              }
+            },
+            "500": {
+              "description": "Server error",
+              "schema": {
+                "$ref": "#/definitions/Error"
+              }
+            }
+          },
+          "security": [
+            {
+              "BearerAuth": []
+            }
+          ]
+        }
+      },
+      "/jobs/{id}": {
+        "get": {
+          "tags": [
+            "Jobs"
+          ],
+          "summary": "Get job details by ID",
+          "description": "Returns detailed information about a specific job posting",
+          "operationId": "getJobById",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "description": "ID of the job to retrieve",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful operation",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "success": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "data": {
+                    "type": "object",
+                    "properties": {
+                      "job": {
+                        "$ref": "#/definitions/Job"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Job not found",
+              "schema": {
+                "$ref": "#/definitions/Error"
+              }
+            },
+            "500": {
+              "description": "Server error",
+              "schema": {
+                "$ref": "#/definitions/Error"
+              }
+            }
+          },
+          "security": [
+            {
+              "BearerAuth": []
+            }
+          ]
+        },
+        "put": {
+          "tags": [
+            "Jobs"
+          ],
+          "summary": "Update an existing job posting",
+          "description": "Updates a job posting with the provided information",
+          "operationId": "updateJob",
+          "produces": [
+            "application/json"
+          ],
+          "consumes": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "description": "ID of the job to update",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "in": "body",
+              "name": "body",
+              "description": "Updated job data",
+              "required": true,
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "example": "Senior Construction Site Manager"
+                  },
+                  "description": {
+                    "type": "string",
+                    "example": "Looking for an experienced senior site manager to oversee our commercial building project."
+                  },
+                  "requirements": {
+                    "type": "string",
+                    "example": "Minimum 8 years experience in commercial construction. Valid certifications required."
+                  },
+                  "location": {
+                    "type": "string",
+                    "example": "Nairobi, Kenya"
+                  },
+                  "contractType": {
+                    "type": "string",
+                    "enum": [
+                      "full-time",
+                      "part-time",
+                      "contract",
+                      "temporary"
+                    ],
+                    "example": "full-time"
+                  },
+                  "salary": {
+                    "type": "object",
+                    "properties": {
+                      "amount": {
+                        "type": "number",
+                        "example": 100000
+                      },
+                      "currency": {
+                        "type": "string",
+                        "example": "KES"
+                      },
+                      "period": {
+                        "type": "string",
+                        "enum": [
+                          "hourly",
+                          "daily",
+                          "weekly",
+                          "monthly",
+                          "yearly"
+                        ],
+                        "example": "monthly"
+                      }
+                    }
+                  },
+                  "skills": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "example": [
+                      "Project Management",
+                      "Team Leadership",
+                      "Safety Compliance",
+                      "Budget Management"
+                    ]
+                  },
+                  "applicationDeadline": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2025-06-15T00:00:00.000Z"
+                  },
+                  "startDate": {
+                    "type": "string",
+                    "format": "date-time",
+                    "example": "2025-07-01T00:00:00.000Z"
+                  },
+                  "contactEmail": {
+                    "type": "string",
+                    "format": "email",
+                    "example": "kramermwangala@gmail.com"
+                  },
+                  "contactPhone": {
+                    "type": "string",
+                    "example": "+254712345678"
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Job updated successfully",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "success": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "data": {
+                    "type": "object",
+                    "properties": {
+                      "job": {
+                        "$ref": "#/definitions/Job"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid input",
+              "schema": {
+                "$ref": "#/definitions/Error"
+              }
+            },
+            "401": {
+              "description": "Unauthorized",
+              "schema": {
+                "$ref": "#/definitions/Error"
+              }
+            },
+            "403": {
+              "description": "Forbidden - Not authorized to update this job",
+              "schema": {
+                "$ref": "#/definitions/Error"
+              }
+            },
+            "404": {
+              "description": "Job not found",
+              "schema": {
+                "$ref": "#/definitions/Error"
+              }
+            },
+            "500": {
+              "description": "Server error",
+              "schema": {
+                "$ref": "#/definitions/Error"
+              }
+            }
+          },
+          "security": [
+            {
+              "BearerAuth": []
+            }
+          ]
+        },
+        "delete": {
+          "tags": [
+            "Jobs"
+          ],
+          "summary": "Delete a job posting",
+          "description": "Removes a job posting from the system",
+          "operationId": "deleteJob",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "description": "ID of the job to delete",
+              "required": true,
+              "type": "string"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Job deleted successfully",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "success": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "data": {
+                    "type": "object",
+                    "properties": {
+                      "message": {
+                        "type": "string",
+                        "example": "Job successfully deleted"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized",
+              "schema": {
+                "$ref": "#/definitions/Error"
+              }
+            },
+            "403": {
+              "description": "Forbidden - Not authorized to delete this job",
+              "schema": {
+                "$ref": "#/definitions/Error"
+              }
+            },
+            "404": {
+              "description": "Job not found",
+              "schema": {
+                "$ref": "#/definitions/Error"
+              }
+            },
+            "500": {
+              "description": "Server error",
+              "schema": {
+                "$ref": "#/definitions/Error"
+              }
+            }
+          },
+          "security": [
+            {
+              "BearerAuth": []
+            }
+          ]
+        }
+      },
+      "/jobs/{id}/status": {
+        "patch": {
+          "tags": [
+            "Jobs"
+          ],
+          "summary": "Update job status",
+          "description": "Updates the status of a job posting (open, closed, filled)",
+          "operationId": "updateJobStatus",
+          "produces": [
+            "application/json"
+          ],
+          "consumes": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "description": "ID of the job to update status",
+              "required": true,
+              "type": "string"
+            },
+            {
+              "in": "body",
+              "name": "body",
+              "description": "New status for the job",
+              "required": true,
+              "schema": {
+                "type": "object",
+                "required": [
+                  "status"
+                ],
+                "properties": {
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "open",
+                      "closed",
+                      "filled"
+                    ],
+                    "example": "filled"
+                  }
+                }
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Job status updated successfully",
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "success": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "data": {
+                    "type": "object",
+                    "properties": {
+                      "job": {
+                        "$ref": "#/definitions/Job"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Invalid status value",
+              "schema": {
+                "$ref": "#/definitions/Error"
+              }
+            },
+            "401": {
+              "description": "Unauthorized",
+              "schema": {
+                "$ref": "#/definitions/Error"
+              }
+            },
+            "403": {
+              "description": "Forbidden - Not authorized to update this job",
+              "schema": {
+                "$ref": "#/definitions/Error"
+              }
+            },
+            "404": {
+              "description": "Job not found",
+              "schema": {
+                "$ref": "#/definitions/Error"
+              }
+            },
+            "500": {
+              "description": "Server error",
+              "schema": {
+                "$ref": "#/definitions/Error"
+              }
+            }
+          },
+          "security": [
+            {
+              "BearerAuth": []
+            }
+          ]
+        }
+      }
+    },
+    "definitions": {
+      "Job": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "example": "60d21b4667d0d8992e610c85"
+          },
+          "title": {
+            "type": "string",
+            "example": "Construction Site Manager"
+          },
+          "description": {
+            "type": "string",
+            "example": "Looking for an experienced site manager to oversee our commercial building project."
+          },
+          "requirements": {
+            "type": "string",
+            "example": "Minimum 5 years experience in commercial construction. Valid certifications required."
+          },
+          "location": {
+            "type": "string",
+            "example": "Nairobi, Kenya"
+          },
+          "contractType": {
+            "type": "string",
+            "enum": [
+              "full-time",
+              "part-time",
+              "contract",
+              "temporary"
+            ],
+            "example": "full-time"
+          },
+          "salary": {
+            "type": "object",
+            "properties": {
+              "amount": {
+                "type": "number",
+                "example": 80000
+              },
+              "currency": {
+                "type": "string",
+                "example": "KES"
+              },
+              "period": {
+                "type": "string",
+                "enum": [
+                  "hourly",
+                  "daily",
+                  "weekly",
+                  "monthly",
+                  "yearly"
+                ],
+                "example": "monthly"
+              }
+            }
+          },
+          "skills": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": [
+              "Project Management",
+              "Team Leadership",
+              "Safety Compliance"
+            ]
+          },
+          "applicationDeadline": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-05-30T00:00:00.000Z"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-06-15T00:00:00.000Z"
+          },
+          "contactEmail": {
+            "type": "string",
+            "format": "email",
+            "example": "kramermwangala@gmail.com"
+          },
+          "contactPhone": {
+            "type": "string",
+            "example": "+254712345678"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "open",
+              "closed",
+              "filled"
+            ],
+            "example": "open"
+          },
+          "createdBy": {
+            "type": "string",
+            "example": "60d21b4667d0d8992e610c85"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-04-15T10:30:00.000Z"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-04-15T10:30:00.000Z"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "example": false
+          },
+          "error": {
+            "type": "string",
+            "example": "Error message"
+          },
+          "details": {
+            "type": "object",
+            "example": {
+              "field": "Error details"
+            }
+          }
+        }
+      }
+    }
+  }
